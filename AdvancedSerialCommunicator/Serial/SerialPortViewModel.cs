@@ -69,9 +69,9 @@ namespace AdvancedSerialCommunicator.Serial
             Boxes.LogCallback = LogMessages;
 
             Receiver = new MessageReceiver();
+            Receiver.UpdateSerialPort(Port);
             Receiver.MessageReceivedCallback = Messages.MessageReceived;
             Receiver.UnprocessedMessageCallback = Messages.UnprocessedBufferMessage;
-            Receiver.UpdateSerialPort(Port);
 
             UpdateSettings();
             UpdateTimeouts();

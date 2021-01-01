@@ -41,6 +41,7 @@ namespace AdvancedSerialCommunicator
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Model.Port.StopMessageReceiver();
+            Model.Port.Receiver.KillThreadLoop();
             Application.Current.Shutdown();
         }
     }

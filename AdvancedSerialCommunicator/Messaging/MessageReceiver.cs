@@ -17,6 +17,8 @@ namespace AdvancedSerialCommunicator.Messaging
 
         public bool IsEnabled { get; set; }
 
+        private bool ShouldFullyShutdownThread { get; set; }
+
         private SerialPort Port { get; set; }
 
         public Action<string> MessageReceivedCallback { get; internal set; }
@@ -26,6 +28,7 @@ namespace AdvancedSerialCommunicator.Messaging
         {
             IsEnabled = true;
             ReceiverThread = new Thread(ReceiveLoop);
+            ReceiverThread.Start();
         }
 
         private void ReceiveLoop()
@@ -35,6 +38,11 @@ namespace AdvancedSerialCommunicator.Messaging
 
             while (true)
             {
+                if (ShouldFullyShutdownThread)
+                {
+                    return;
+                }
+
                 if (IsEnabled)
                 {
                     if (Port == null)
@@ -99,6 +107,16 @@ namespace AdvancedSerialCommunicator.Messaging
             StopReceiving();
             Port = port;
             StartReceiving();
+        }
+
+        /// <summary>
+        /// Fully kills the thread. Only use when shutting down the app
+        /// </summary>
+        public void KillThreadLoop()
+        {
+            IsEnabled = false;
+            ShouldFullyShutdownThread = true;
+            ReceiverThread.Abort();
         }
     }
 }
