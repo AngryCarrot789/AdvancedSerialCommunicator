@@ -1,11 +1,7 @@
 ﻿using AdvancedSerialCommunicator.Interfaces;
-using AdvancedSerialCommunicator.Serial;
+using AdvancedSerialCommunicator.Serial.Settings;
 using AdvancedSerialCommunicator.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TheRFramework.Utilities;
 
 namespace AdvancedSerialCommunicator.Messaging
@@ -101,10 +97,9 @@ namespace AdvancedSerialCommunicator.Messaging
             Message(DateTime.Now, MessageDirection.RX, message);
         }
 
-        public void UnprocessedBufferMessage(string message)
+        public void AddBufferData(string data)
         {
-            string msg = MessageFormatter.FormatDirection(MessageDirection.Buffer);
-            AddReceivedMessage(msg);
+            AddReceivedMessage(MessageFormatter.FormatBuffer(data));
         }
 
         public void AddReceivedMessage(string message)
@@ -149,6 +144,7 @@ namespace AdvancedSerialCommunicator.Messaging
         {
             if (!string.IsNullOrEmpty(ToBeSentMessage))
             {
+                // shhhh
                 ExecutableStatus executable = new ExecutableStatus();
                 SendMessageCallback?.Invoke(ToBeSentMessage, executable);
                 if (executable.CanExecute)

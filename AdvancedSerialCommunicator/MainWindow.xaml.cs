@@ -1,6 +1,8 @@
 ﻿using AdvancedSerialCommunicator.Interfaces;
 using AdvancedSerialCommunicator.ViewModels;
+using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace AdvancedSerialCommunicator
 {
@@ -43,6 +45,11 @@ namespace AdvancedSerialCommunicator
             Model.Port.StopMessageReceiver();
             Model.Port.Receiver.KillThreadLoop();
             Application.Current.Shutdown();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            GC.Collect();
         }
     }
 }

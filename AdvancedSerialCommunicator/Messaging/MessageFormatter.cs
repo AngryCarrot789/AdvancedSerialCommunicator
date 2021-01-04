@@ -12,10 +12,10 @@ namespace AdvancedSerialCommunicator.Messaging
         {
             switch (direction)
             {
-                case MessageDirection.RX:     return "RX>";
-                case MessageDirection.TX:     return "TX>";
-                case MessageDirection.Buffer: return "Buffer>";
-                default:                      return "Err>";
+                case MessageDirection.RX:     return "[RX]>";
+                case MessageDirection.TX:     return "[TX]>";
+                case MessageDirection.Buffer: return "[Buffer]>";
+                default:                      return "[Error]>";
             }
         }
 
@@ -32,6 +32,11 @@ namespace AdvancedSerialCommunicator.Messaging
         public static string FormatMessage(MessageDirection direction, string message)
         {
             return $"{FormatDirection(direction)} {message}";
+        }
+
+        public static string FormatBuffer(string message)
+        {
+            return $"[Buffered Data]> {message}";
         }
     }
 }

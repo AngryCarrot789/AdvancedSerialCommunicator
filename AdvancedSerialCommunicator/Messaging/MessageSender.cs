@@ -17,7 +17,6 @@ namespace AdvancedSerialCommunicator.Messaging
         public bool CanSend { get; set; }
 
         private SerialPort Port { get; set; }
-
         public MessageBoxLogger Logger { get; set; }
 
         public MessageSender()
@@ -31,6 +30,12 @@ namespace AdvancedSerialCommunicator.Messaging
             if (error == MessagingError.TimeoutException)
             {
                 Logger?.LogSent("Timed out when trying to send. Possibly because the recipient wasn't connected to the other port");
+                return;
+            }
+            else if (error == MessagingError.NotConnected)
+            {
+                Logger?.LogSent("Not connected to a port. Cannot send message");
+                return;
             }
             successful.CanExecute = error == MessagingError.None;
         }
@@ -39,6 +44,11 @@ namespace AdvancedSerialCommunicator.Messaging
         {
             try
             {
+                if (Port?.IsOpen == false)
+                {
+                    return MessagingError.NotConnected;
+                }
+
                 string newMessage = message + (newLine ? "\n" : "");
                 byte[] buffer = Port.Encoding.GetBytes(newMessage);
                 for(int i = 0; i < buffer.Length; i++)

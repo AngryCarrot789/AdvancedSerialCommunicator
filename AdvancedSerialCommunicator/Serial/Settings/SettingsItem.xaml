@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="AdvancedSerialCommunicator.Serial.Settings.SettingsItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AdvancedSerialCommunicator.Serial.Settings"
+             mc:Ignorable="d" 
+             Height="28" 
+             d:DesignWidth="200">
+    <Grid>
+        <TextBlock FontSize="13" 
+                   Text="{Binding PreviewName, UpdateSourceTrigger=PropertyChanged, FallbackValue=PreviewName}"
+                   VerticalAlignment="Top"/>
+        <TextBlock FontSize="9" 
+                   Text="{Binding RealName, UpdateSourceTrigger=PropertyChanged, FallbackValue=RealName}"
+                   VerticalAlignment="Bottom"/>
+    </Grid>
+</UserControl>

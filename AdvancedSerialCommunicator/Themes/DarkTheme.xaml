@@ -138,7 +138,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}"/>
@@ -182,7 +182,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style x:Key="RoundedCorners" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}"/>
@@ -1568,7 +1568,8 @@
                                     </TransformGroup>
                                 </Grid.LayoutTransform>
                                 <Ellipse x:Name="circle" Fill="{StaticResource ControlDefaultBackground}" HorizontalAlignment="Center" Height="19" Stroke="{StaticResource ControlDefaultBorderBrush}" VerticalAlignment="Center" Width="19"/>
-                                <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" SnapsToDevicePixels="false" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" VerticalAlignment="Center"/> <!-- the r xd -->  
+                                <Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" SnapsToDevicePixels="false" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" VerticalAlignment="Center"/>
+                                <!-- the r xd -->
                             </Grid>
                             <ContentPresenter HorizontalAlignment="Center" Margin="0,4,0,0" Grid.Row="1" RecognizesAccessKey="True" SnapsToDevicePixels="True" VerticalAlignment="Top"/>
                         </Grid>
@@ -2897,7 +2898,7 @@
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="True"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
         <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1,0"/>
         <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
@@ -2912,8 +2913,9 @@
                             <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                         </Grid.RowDefinitions>
                         <Button x:Name="PART_LineUpButton" 
-                                        Command="{x:Static ScrollBar.LineUpCommand}" 
-                                        BorderThickness="1 1 1 0">
+                                Command="{x:Static ScrollBar.LineUpCommand}" 
+                                BorderThickness="1 1 1 0"
+                                Style="{DynamicResource ScrollBarButtonStyle}">
                             <Path x:Name="ArrowTop" Data="M 0,4 C0,4 0,6 0,6 0,6 3.5,2.5 3.5,2.5 3.5,2.5 7,6 7,6 7,6 7,4 7,4 7,4 3.5,0.5 3.5,0.5 3.5,0.5 0,4 0,4 z"
                                   Fill="{StaticResource ControlGlythColour}" Margin="3,4,3,3" Stretch="Uniform"/>
                         </Button>
@@ -2935,9 +2937,10 @@
                         </Border>
 
                         <Button x:Name="PART_LineDownButton" 
-                                        Command="{x:Static ScrollBar.LineDownCommand}"
-                                         BorderThickness="1 0 1 1"
-                                        Grid.Row="2">
+                                Command="{x:Static ScrollBar.LineDownCommand}"
+                                Style="{DynamicResource ScrollBarButtonStyle}"
+                                BorderThickness="1 0 1 1"
+                                Grid.Row="2">
                             <Path x:Name="ArrowBottom"
                                   Data="M 0,2.5 C0,2.5 0,0.5 0,0.5 0,0.5 3.5,4 3.5,4 3.5,4 7,0.5 7,0.5 7,0.5 7,2.5 7,2.5 7,2.5 3.5,6 3.5,6 3.5,6 0,2.5 0,2.5 z" 
                                   Fill="{StaticResource ControlGlythColour}" Margin="3,4,3,3" Stretch="Uniform"/>
@@ -2984,7 +2987,7 @@
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Width" Value="Auto"/>
                 <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource ControlDefaultBorderBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
                 <Setter Property="Foreground" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
                 <Setter Property="MinWidth" Value="0"/>
                 <Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}"/>
@@ -3000,7 +3003,7 @@
                                     <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
                                 </Grid.ColumnDefinitions>
                                 <Button x:Name="PART_LineLeftButton" 
-                                        BorderThickness="1 1 0 1"
+                                        BorderThickness="1 1 0 1" Style="{DynamicResource ScrollBarButtonStyle}"
                                         Command="{x:Static ScrollBar.LineLeftCommand}" >
                                     <Path x:Name="ArrowLeft" Data="M 3.18,7 C3.18,7 5,7 5,7 5,7 1.81,3.5 1.81,3.5 1.81,3.5 5,0 5,0 5,0 3.18,0 3.18,0 3.18,0 0,3.5 0,3.5 0,3.5 3.18,7 3.18,7 z" 
                                           Fill="{StaticResource ControlGlythColour}" Margin="3" Stretch="Uniform"/>
@@ -3023,7 +3026,7 @@
                                 </Border>
 
                                 <Button x:Name="PART_LineRightButton" Grid.Column="2" Command="{x:Static ScrollBar.LineRightCommand}" 
-                                        BorderThickness="0 1 1 1">
+                                        BorderThickness="0 1 1 1" Style="{DynamicResource ScrollBarButtonStyle}">
                                     <Path x:Name="ArrowRight" Data="M 1.81,7 C1.81,7 0,7 0,7 0,7 3.18,3.5 3.18,3.5 3.18,3.5 0,0 0,0 0,0 1.81,0 1.81,0 1.81,0 5,3.5 5,3.5 5,3.5 1.81,7 1.81,7 z" Fill="{StaticResource ControlGlythColour}" Margin="3" Stretch="Uniform"/>
                                 </Button>
                             </Grid>
@@ -3343,14 +3346,14 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Rectangle x:Name="Corner" Grid.Column="1" Fill="Transparent" Grid.Row="1"/>
+                        <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource ControlBrightDefaultBackground}" Grid.Row="1"/>
                         <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
                         <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" 
                                    Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" 
                                    Minimum="0" Grid.Row="0" 
                                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                                    Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
-                                   ViewportSize="{TemplateBinding ViewportHeight}" Grid.RowSpan="2"/>
+                                   ViewportSize="{TemplateBinding ViewportHeight}" Grid.RowSpan="1"/>
                         <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar"
                                    Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0"
                                    Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
@@ -4616,6 +4619,7 @@
         <Setter Property="PlacementRectangle" Value="10 10 5 5"/>
         <Setter Property="HorizontalOffset" Value="15"/>
         <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="25000"/>
         <Setter Property="VerticalOffset" Value="15"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -4723,21 +4727,21 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Grid>
-                        <Border Background="{TemplateBinding Background}"
+                    <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid>
-                                <AdornerDecorator Margin="0,30,0,0">
-                                    <ContentPresenter />
-                                </AdornerDecorator>
-                                <Grid Height="30" x:Name="titlebar"
+                        <Grid>
+                            <AdornerDecorator Margin="0,30,0,0">
+                                <ContentPresenter />
+                            </AdornerDecorator>
+                            <ResizeGrip x:Name="WindowResizeGrip" HorizontalAlignment="Right" IsTabStop="false" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                            <Grid Height="30" x:Name="titlebar"
                                       Background="{TemplateBinding BorderBrush}"
                                       VerticalAlignment="Top" Margin="0">
-                                    <DockPanel Margin="0,0,130,0">
-                                        <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,4,0,0" 
+                                <DockPanel Margin="0,0,130,0">
+                                    <Image HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,4,0,0" 
                                                Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}" Height="24"  />
-                                        <TextBlock Margin="5,3"
+                                    <TextBlock Margin="5,3"
                                                    VerticalAlignment="Center"
                                                    HorizontalAlignment="Stretch"
                                                    TextWrapping="NoWrap"
@@ -4745,56 +4749,55 @@
                                                    Foreground="{StaticResource ControlDefaultForeground}"
                                                    Text="{Binding Title, RelativeSource={RelativeSource TemplatedParent}}"   
                                                    Grid.Column="1" TextAlignment="Left"/>
-                                    </DockPanel>
-                                    <StackPanel Orientation="Horizontal"
+                                </DockPanel>
+                                <StackPanel Orientation="Horizontal"
                                         Grid.Column="0" HorizontalAlignment="Right">
-                                        <Button x:Name="btnMinimize"
+                                    <Button x:Name="btnMinimize"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
                                                 Width="40"
                                                 VerticalContentAlignment="Bottom"
                                                 WindowChrome.IsHitTestVisibleInChrome="True" 
                                                 Click="Minimize_Event">
-                                            <Rectangle Width="10" 
+                                        <Rectangle Width="10" 
                                                        VerticalAlignment="Center" 
                                                        Margin="1 1 0 0" 
                                                        Stroke="{StaticResource ControlGlythColour}" 
                                                        StrokeThickness="2"/>
-                                        </Button>
+                                    </Button>
 
-                                        <Button x:Name="btnRestore"
+                                    <Button x:Name="btnRestore"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
                                                 Width="40"
                                                 WindowChrome.IsHitTestVisibleInChrome="True" 
                                                 Click="AutoMinimize_Event">
-                                            <Grid Width="12" Height="12">
-                                                <Rectangle StrokeThickness="2" 
+                                        <Grid Width="12" Height="12">
+                                            <Rectangle StrokeThickness="2" 
                                                            Stroke="{StaticResource ControlGlythColour}"
                                                            Margin="3,0,0,3"/>
-                                                <Rectangle StrokeThickness="2" 
+                                            <Rectangle StrokeThickness="2" 
                                                            Fill="{TemplateBinding BorderBrush}"
                                                            Stroke="{StaticResource ControlGlythColour}"
                                                            Margin="0 3 3 0"/>
-                                            </Grid>
-                                        </Button>
-                                        <Button x:Name="btnClose"
+                                        </Grid>
+                                    </Button>
+                                    <Button x:Name="btnClose"
                                                 Background="Transparent"
                                                 BorderBrush="Transparent"
                                                 Template="{DynamicResource CloseWindowButton}"
                                                 Width="40"
                                                 WindowChrome.IsHitTestVisibleInChrome="True" 
                                                 Click="CloseWindow_Event">
-                                            <Grid Margin="0 1 0 0">
-                                                <Line X1="0" Y1="0" X2="11" Y2="11" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" />
-                                                <Line X1="0" Y2="0" Y1="11" X2="11" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" />
-                                            </Grid>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
+                                        <Grid Margin="0 1 0 0">
+                                            <Line X1="0" Y1="0" X2="11" Y2="11" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" />
+                                            <Line X1="0" Y2="0" Y1="11" X2="11" Stroke="{StaticResource ControlGlythColour}" StrokeThickness="2" />
+                                        </Grid>
+                                    </Button>
+                                </StackPanel>
                             </Grid>
-                        </Border>
-                    </Grid>
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -5125,6 +5128,57 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
+    </Style>
+    <Style x:Key="ScrollBarButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="{StaticResource ControlDefaultBackground}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        Background="{TemplateBinding Background}" 
+                        SnapsToDevicePixels="true"
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch">
+                        <ContentPresenter x:Name="contentPresenter" 
+                            Focusable="False" 
+                            Margin="{TemplateBinding Padding}" 
+                            RecognizesAccessKey="True" 
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlMouseOverBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource ControlMouseOverBackground}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlMouseOverBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource ControlSelectedBackground}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlSelectedBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource ControlBrightDefaultBackground}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource ControlBrightDefaultBorderBrush}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource ControlDisabledGlythColour}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_- -->

@@ -7,22 +7,25 @@ using System.Text;
 using System.Threading.Tasks;
 using TheRFramework.Utilities;
 
-namespace AdvancedSerialCommunicator.Serial
+namespace AdvancedSerialCommunicator.Serial.Settings
 {
     public class PortSettingsViewModel : BaseViewModel
     {
+        private bool _canEditControls;
         private string _comPort;
         private string _baudRate;
         private string _dataBits;
-        private string _stopBits;
+        private SettingsItemViewModel _stopBits;
         private string _parity;
-        private string _handShake;
+        private SettingsItemViewModel _handShake;
         private double _readTimeout;
         private double _writeTimeout;
         private double _readBufferSize;
         private double _writeBufferSize;
         private bool _dataTerminalReady;
         private bool _requestToTransmit;
+        private bool _breakState;
+        private bool _discardNullCharacters;
 
         public ObservableCollection<string> AvaliableCOMPorts { get; set; }
 
@@ -31,7 +34,14 @@ namespace AdvancedSerialCommunicator.Serial
         public Action SettingsChangedCallback { get; internal set; }
         public Action TimeoutsChangedCallback { get; internal set; }
         public Action BufferSizesChangedCallback { get; internal set; }
-        public Action ThingsChangedCallback { get; internal set; }
+        public Action SoftwareHardwareSettingsChangedCallback { get; internal set; }
+        public Action BreakStateChangedCallback { get; internal set; }
+
+        public bool CanEditControls
+        {
+            get => _canEditControls;
+            set => RaisePropertyChanged(ref _canEditControls, value);
+        }
 
         public string SelectedCOMPort
         {
@@ -51,7 +61,7 @@ namespace AdvancedSerialCommunicator.Serial
             set => RaisePropertyChanged(ref _dataBits, value, SettingsChangedCallback);
         }
 
-        public string SelectedStopBits
+        public SettingsItemViewModel SelectedStopBits
         {
             get => _stopBits;
             set => RaisePropertyChanged(ref _stopBits, value, SettingsChangedCallback);
@@ -63,7 +73,7 @@ namespace AdvancedSerialCommunicator.Serial
             set => RaisePropertyChanged(ref _parity, value, SettingsChangedCallback);
         }
 
-        public string SelectedHandshake
+        public SettingsItemViewModel SelectedHandshake
         {
             get => _handShake;
             set => RaisePropertyChanged(ref _handShake, value, SettingsChangedCallback);
@@ -96,13 +106,25 @@ namespace AdvancedSerialCommunicator.Serial
         public bool DataTerminalReady
         {
             get => _dataTerminalReady;
-            set => RaisePropertyChanged(ref _dataTerminalReady, value, ThingsChangedCallback);
+            set => RaisePropertyChanged(ref _dataTerminalReady, value, SoftwareHardwareSettingsChangedCallback);
         }
 
         public bool RequestToTransmit
         {
             get => _requestToTransmit;
-            set => RaisePropertyChanged(ref _requestToTransmit, value, ThingsChangedCallback);
+            set => RaisePropertyChanged(ref _requestToTransmit, value, SoftwareHardwareSettingsChangedCallback);
+        }
+
+        public bool BreakState
+        {
+            get => _breakState;
+            set => RaisePropertyChanged(ref _breakState, value, BreakStateChangedCallback);
+        }
+
+        public bool DiscardNullCharacters
+        {
+            get => _discardNullCharacters;
+            set => RaisePropertyChanged(ref _discardNullCharacters, value, SoftwareHardwareSettingsChangedCallback);
         }
 
         public PortSettingsViewModel()
@@ -114,9 +136,7 @@ namespace AdvancedSerialCommunicator.Serial
 
             SelectedBaudRate = "115200";
             SelectedDataBits = "8";
-            SelectedStopBits = "One";
             SelectedParity = "None";
-            SelectedHandshake = "None";
 
             ReadTimeout = 500;
             WriteTimeout = 500;
@@ -153,7 +173,7 @@ namespace AdvancedSerialCommunicator.Serial
 
         public int GetBaudRate()
         {
-            if (int.TryParse(SelectedBaudRate, out int baudRate))
+            if (int.TryParse(SelectedBaudRate ?? "0", out int baudRate))
             {
                 return baudRate;
             }
@@ -162,7 +182,7 @@ namespace AdvancedSerialCommunicator.Serial
 
         public int GetDataBits()
         {
-            if (int.TryParse(SelectedDataBits, out int dataBits))
+            if (int.TryParse(SelectedDataBits ?? "8", out int dataBits))
             {
                 return dataBits;
             }
@@ -171,16 +191,19 @@ namespace AdvancedSerialCommunicator.Serial
         
         public StopBits GetStopBits()
         {
-            if (Enum.TryParse(SelectedStopBits, out StopBits stopBits))
+            if (SelectedStopBits != null)
             {
-                return stopBits;
+                if (Enum.TryParse(SelectedStopBits.RealName, out StopBits stopBits))
+                {
+                    return stopBits;
+                }
             }
-            return StopBits.None;
+            return StopBits.One;
         }
 
         public Parity GetParity()
         {
-            if (Enum.TryParse(SelectedParity, out Parity parity))
+            if (Enum.TryParse(SelectedParity ?? "None", out Parity parity))
             {
                 return parity;
             }
@@ -189,9 +212,12 @@ namespace AdvancedSerialCommunicator.Serial
 
         public Handshake GetHandshake()
         {
-            if (Enum.TryParse(SelectedHandshake, out Handshake handshake))
+            if (SelectedHandshake != null)
             {
-                return handshake;
+                if (Enum.TryParse(SelectedHandshake.RealName, out Handshake handshake))
+                {
+                    return handshake;
+                }
             }
             return Handshake.None;
         }
@@ -224,6 +250,16 @@ namespace AdvancedSerialCommunicator.Serial
         public bool GetRTS()
         {
             return RequestToTransmit;
+        }
+
+        public bool GetBreakState()
+        {
+            return BreakState;
+        }
+
+        public bool GetDiscardNull()
+        {
+            return DiscardNullCharacters;
         }
     }
 }

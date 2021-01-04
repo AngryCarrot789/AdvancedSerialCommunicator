@@ -22,7 +22,7 @@ namespace AdvancedSerialCommunicator.Messaging
         private SerialPort Port { get; set; }
 
         public Action<string> MessageReceivedCallback { get; internal set; }
-        public Action<string> UnprocessedMessageCallback { get; internal set; }
+        public Action<string> BufferDataFoundCallback { get; internal set; }
 
         public MessageReceiver()
         {
@@ -88,6 +88,36 @@ namespace AdvancedSerialCommunicator.Messaging
                 else
                 {
                     Thread.Sleep(10);
+                }
+            }
+        }
+
+        public void ProcessBufferedString()
+        {
+            string message = "";
+            char read;
+            if (Port.IsOpen)
+            {
+                while (Port.BytesToRead > 0)
+                {
+                    read = (char)Port.ReadChar();
+                    switch (read)
+                    {
+                        case '\r':
+                            break;
+                        case '\n':
+                            BufferDataFoundCallback?.Invoke(message);
+                            message = "";
+                            break;
+                        default:
+                            message += read;
+                            break;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(message))
+                {
+                    BufferDataFoundCallback?.Invoke(message);
                 }
             }
         }

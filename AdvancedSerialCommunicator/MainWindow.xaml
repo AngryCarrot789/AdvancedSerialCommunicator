@@ -7,13 +7,16 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:Converters="clr-namespace:AdvancedSerialCommunicator.Converters"
         xmlns:local="clr-namespace:AdvancedSerialCommunicator" 
+        xmlns:settings="clr-namespace:AdvancedSerialCommunicator.Serial.Settings"
+        xmlns:attached="clr-namespace:AdvancedSerialCommunicator.AttachedProperties"
         mc:Ignorable="d"
         Title="Advanced Serial Communicator" 
-        Height="720" Width="1200"
-        MinWidth="1200"
+        Height="720" Width="1128"
+        MinWidth="930" MinHeight="520"
         Closing="Window_Closing"
         Style="{DynamicResource CustomWindowStyle}">
     <Window.Resources>
+        <Converters:BoolInvertConverter x:Key="BoolInvertConverter"/>
         <Converters:BoolToColourConverter x:Key="BoolToColourConverter"/>
         <Converters:BoolToCustomStringConverter x:Key="BoolToIsConnectedConverter"/>
         <Style x:Key="ConnectDisconnectButton" TargetType="{x:Type Button}">
@@ -70,28 +73,45 @@
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <GroupBox DataContext="{Binding Port.Messages, Mode=OneTime}" Header="Messaging" Grid.Row="0" Margin="5,5,5,205">
+        <GroupBox DataContext="{Binding Port.Messages, Mode=OneTime}" 
+                  Grid.Row="0" 
+                  Margin="5,5,5,205">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Messaging" Padding="4"/>
+                    <Separator Style="{DynamicResource VerticalSeparator}" Margin="3 0 5 0"/>
+                    <Button Command="{Binding AboutCommand, Mode=OneTime}" Content="About this program"                       Background="{DynamicResource ControlBrightDefaultBackground}" BorderBrush="{DynamicResource ControlDarkerBorderBrush}" Width="115"/>
+                    <Button Command="{Binding SerialInfoCommand, Mode=OneTime}" Content="About Serial Ports" Margin="5 0 0 0" Background="{DynamicResource ControlBrightDefaultBackground}" BorderBrush="{DynamicResource ControlDarkerBorderBrush}" Width="115"/>
+                </StackPanel>
+            </GroupBox.Header>
+            <GroupBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Garbage Collector" Click="MenuItem_Click" Template="{DynamicResource SingleDropDownMenuItem}"/>
+                </ContextMenu>
+            </GroupBox.ContextMenu>
             <Grid>
                 <Grid Margin="0,0,0,35">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*" MinWidth="200"/>
+                        <ColumnDefinition Width="5*" MinWidth="218"/>
                         <ColumnDefinition Width="3"/>
-                        <ColumnDefinition Width="3*" MinWidth="180"/>
+                        <ColumnDefinition Width="3*" MinWidth="195"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" Margin="0,0,2,0">
                         <Border BorderBrush="{DynamicResource ControlDefaultBorderBrush}" BorderThickness="2" Margin="0,22,0,0">
                             <Grid>
                                 <TextBox Background="Transparent" 
-                                         BorderBrush="Transparent" 
-                                         IsReadOnly="True" 
-                                         AcceptsReturn="False" 
-                                         AcceptsTab="False"
-                                         Text="{Binding ReceivedText}"
-                                         VerticalScrollBarVisibility="Visible"
-                                         x:Name="receivedBox"/>
+                                        BorderBrush="Transparent" 
+                                        IsReadOnly="True" 
+                                        AcceptsReturn="False" 
+                                        AcceptsTab="False"
+                                        Text="{Binding ReceivedText}"
+                                        VerticalScrollBarVisibility="Visible"
+                                        attached:HorizontalScrolling.UseHorizontalScrollingValue="True"
+                                        HorizontalScrollBarVisibility="Visible"
+                                        x:Name="receivedBox"/>
                             </Grid>
                         </Border>
-                        <Border VerticalAlignment="Top" HorizontalAlignment="Center" Margin="334,0,274,0" CornerRadius="4 4 0 0" BorderBrush="{DynamicResource ControlDefaultBorderBrush}" BorderThickness="2 2 2 0" Background="{DynamicResource BackgroundColour}" Height="24">
+                        <Border VerticalAlignment="Top" HorizontalAlignment="Center" Margin="60,0,0,0" CornerRadius="4 4 0 0" BorderBrush="{DynamicResource ControlDefaultBorderBrush}" BorderThickness="2 2 2 0" Background="{DynamicResource BackgroundColour}" Height="24">
                             <TextBlock Text="Received Messages" Padding="7 3 7 3"/>
                         </Border>
                         <Button Command="{Binding ClearReceivedCommand, Mode=OneTime}" Content="Clear" Padding="3" VerticalAlignment="Top" HorizontalAlignment="Left" BorderBrush="{DynamicResource ControlDefaultBorderBrush}" BorderThickness="2 2 2 0" Background="{DynamicResource BackgroundColour}" Width="60"/>
@@ -103,13 +123,15 @@
                         <Border BorderBrush="{DynamicResource ControlDefaultBorderBrush}" BorderThickness="2" Margin="0,22,0,0">
                             <Grid>
                                 <TextBox Background="Transparent" 
-                                         BorderBrush="Transparent" 
-                                         IsReadOnly="True" 
-                                         AcceptsReturn="False" 
-                                         AcceptsTab="False"
-                                         Text="{Binding SentText}"
-                                         VerticalScrollBarVisibility="Visible"
-                                         x:Name="sentBox"/>
+                                             BorderBrush="Transparent" 
+                                             IsReadOnly="True" 
+                                             AcceptsReturn="False" 
+                                             AcceptsTab="False"
+                                             Text="{Binding SentText}"
+                                             VerticalScrollBarVisibility="Visible"
+                                             attached:HorizontalScrolling.UseHorizontalScrollingValue="True"
+                                             HorizontalScrollBarVisibility="Visible"
+                                             x:Name="sentBox"/>
                             </Grid>
                         </Border>
                         <Border VerticalAlignment="Top" HorizontalAlignment="Center" Margin="60 0 0 0" CornerRadius="3 3 0 0" BorderBrush="{DynamicResource ControlDefaultBorderBrush}" BorderThickness="2 2 2 0" Background="{DynamicResource BackgroundColour}">
@@ -121,12 +143,12 @@
                 <Grid VerticalAlignment="Bottom" Height="32">
                     <Button Command="{Binding SendMessageCommand, Mode=OneTime}" Content="Send" HorizontalAlignment="Left" Width="79" BorderThickness="1 1 0 1"/>
                     <TextBox Text="{Binding ToBeSentMessage, UpdateSourceTrigger=PropertyChanged}" 
-                             VerticalContentAlignment="Center" 
-                             Padding="5 2 2 2" 
-                             FontSize="14" 
-                             Margin="79,0,0,0"
-                             AcceptsReturn="False"
-                             AcceptsTab="False">
+                            VerticalContentAlignment="Center" 
+                            Padding="5 2 2 2" 
+                            FontSize="14" 
+                            Margin="79,0,0,0"
+                            AcceptsReturn="False"
+                            AcceptsTab="False">
                         <TextBox.InputBindings>
                             <KeyBinding Key="Enter" Command="{Binding SendMessageCommand}"/>
                         </TextBox.InputBindings>
@@ -135,224 +157,276 @@
             </Grid>
         </GroupBox>
 
-        <Border Background="{DynamicResource ContainerBackground}" 
-                BorderBrush="{DynamicResource ContainerBorder}" 
-                Height="200" 
-                VerticalAlignment="Bottom" 
-                BorderThickness="0 1 0 0"
-                DataContext="{Binding Port, Mode=OneTime}">
+        <Grid Background="{DynamicResource ContainerBackground}" 
+              DataContext="{Binding Port, Mode=OneTime}" Height="200" VerticalAlignment="Bottom">
             <Grid Margin="8">
                 <Grid>
-                    <Grid HorizontalAlignment="Left" Width="160">
-                        <TextBlock Text="Connected To" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5"/>
-                        <TextBlock Text="{Binding ConnectedPort, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Padding="5" Margin="83,0,0,0"/>
-                        <CheckBox IsChecked="{Binding Settings.DataTerminalReady, UpdateSourceTrigger=PropertyChanged}" Content="DTR Enable" Grid.Column="0" ToolTip="Data Terminal Ready" Margin="0,26,0,137"/>
-                        <CheckBox IsChecked="{Binding Settings.RequestToTransmit, UpdateSourceTrigger=PropertyChanged}" Content="RTS Enable" ToolTip="Request To Transmit" Margin="0,46,0,117"/>
-                        <Button Content="{Binding IsConnected, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToIsConnectedConverter}, ConverterParameter='Disconnect#Connect'}" 
-                                Command="{Binding AutoConnectDisconnectCommand, Mode=OneTime}"
-                                Margin="0,71,0,29" 
-                                Background="{Binding IsConnected, Converter={StaticResource BoolToColourConverter}}" Style="{DynamicResource ConnectDisconnectButton}"/>
-                        <Button Command="{Binding ResetSerialPortCommand, Mode=OneTime}" Content="Reset Serial Port" Margin="0,159,0,0" ToolTip="Fully resets the SerialPort object used by this app, disposing of the old one and releasing all memory it previously used, Allowing a new one to be used. Could possibly fix errors with a previous one such as framing/overrun issues"/>
-                    </Grid>
-
-                    <Separator Style="{DynamicResource VerticalSeparator}" HorizontalAlignment="Left" Width="1" Margin="165,0,0,0"/>
-
-                    <Grid Margin="171,0,0,0">
-                        <Grid HorizontalAlignment="Left" Width="400">
-                            <Grid HorizontalAlignment="Left" Width="170">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100*"/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition Width="91*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="134"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="54*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="26"/>
+                                <RowDefinition Height="22"/>
+                                <RowDefinition Height="22"/>
+                                <RowDefinition Height="22"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Connected To" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5"/>
+                            <TextBlock Text="{Binding ConnectedPort, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="5" Margin="83,0,0,0"/>
+                            <CheckBox IsChecked="{Binding Settings.DataTerminalReady, UpdateSourceTrigger=PropertyChanged}" Content="DTR Enable" Grid.Row="1"  ToolTip="Data Terminal Ready. Normally enabled during XON/XOFF software handshaking and RTS/CTR (Clear to Send) hardware handshaking, and modem communications" Height="Auto"/>
+                            <CheckBox IsChecked="{Binding Settings.RequestToTransmit, UpdateSourceTrigger=PropertyChanged}" Content="RTS Enable" Grid.Row="2"  ToolTip="Request To Send/Transmit. Normally used RTS/CTS (Clear to Send) hardware handshaking" Height="Auto"/>
+                            <CheckBox IsChecked="{Binding Settings.BreakState, UpdateSourceTrigger=PropertyChanged}"        Content="Break State" Grid.Row="3" ToolTip="Suspends the transmission of data, Setting the line to LOW, with no stop bits" Height="Auto" IsEnabled="{Binding IsConnected, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Content="{Binding IsConnected, ConverterParameter=Disconnect#Connect, Converter={StaticResource BoolToIsConnectedConverter}, UpdateSourceTrigger=PropertyChanged}" 
+                                        Command="{Binding AutoConnectDisconnectCommand, Mode=OneTime}"
+                                        Background="{Binding IsConnected, Converter={StaticResource BoolToColourConverter}}" 
+                                        Style="{DynamicResource ConnectDisconnectButton}" 
+                                        Grid.Row="4"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" Margin="0,2"/>
+                            <Button Command="{Binding ResetSerialPortCommand, Mode=OneTime}" 
+                                        Content="Reset Serial Port" 
+                                        ToolTip="Fully resets the SerialPort object used by this program, disposing of the old one and releasing all memory it previously used, Allowing a new one to be used. Could possibly fix errors with a previous one such as framing/overrun issues" 
+                                        Grid.Row="5"/>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="58*"/>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition Width="70*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="1"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
                                 <TextBlock Text="Sent Messages:" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                 <TextBlock Text="{Binding Messages.MessagesSent}" Padding="5" VerticalAlignment="Top" Margin="120,0,0,0"/>
-                                <TextBlock Text="Received Messages:" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,26,0,0"/>
-                                <TextBlock Text="{Binding Messages.MessagesReceived}" Padding="5" VerticalAlignment="Top" Margin="120,26,0,0"/>
+                                <TextBlock Text="Received Messages:" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1"/>
+                                <TextBlock Text="{Binding Messages.MessagesReceived}" Padding="5" VerticalAlignment="Top" Margin="120,0,0,0" Grid.Row="1"/>
 
-                                <Grid HorizontalAlignment="Stretch" Margin="0,57,0,0" Height="28" VerticalAlignment="Top">
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="27*"/>
+                                        <ColumnDefinition Width="4"/>
+                                        <ColumnDefinition Width="20*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Command="{Binding Messages.ClearSentCommand, Mode=OneTime}" Content="Clear Sent" Margin="0,0,2,0"/>
-                                    <Button Command="{Binding Messages.ClearReceivedCommand, Mode=OneTime}" Content="Clear Received" Grid.Column="1" Margin="2,0,0,0"/>
+                                    <Button Command="{Binding Messages.ClearReceivedCommand, Mode=OneTime}" Content="Clear Received" Grid.Column="0"/>
+                                    <Button Command="{Binding Messages.ClearSentCommand, Mode=OneTime}"     Content="Clear Sent"     Grid.Column="2"/>
                                 </Grid>
 
-                                <Separator VerticalAlignment="Top" Margin="0,90,0,0"/>
+                                <Grid Grid.Row="3">
+                                    <CheckBox IsChecked="{Binding Settings.DiscardNullCharacters, UpdateSourceTrigger=PropertyChanged}" Content="Discard Null Characters" Height="Auto"/>
+                                </Grid>
 
-                                <Grid Margin="0,95,0,0">
-                                    <TextBlock Padding="5" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Receiver Thread Settings" ToolTip="Receiving of text is done on another thread to increase reliability and speed. Click the button to disable receiving text (idk why you'd want that but anyway)"/>
+                                <Separator VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="4"/>
 
-                                    <TextBlock Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,26,0,0" Text="Is Running: "/>
-                                    <TextBlock Text="{Binding IsReceiveThreadActive, UpdateSourceTrigger=PropertyChanged}" Padding="0 5 5 5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="72,26,0,0"/>
-                                    <Button Command="{Binding AutoStartStopReceiverCommand, Mode=OneTime}" Content="{Binding IsReceiveThreadActive, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToIsConnectedConverter}, ConverterParameter='Stop#Start'}"  Margin="0,52,0,0"/>
+                                <Grid Grid.Row="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="26"/>
+                                        <RowDefinition Height="26"/>
+                                        <RowDefinition Height="5*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Receiver Thread Settings" ToolTip="Receiving of text is done on another thread to increase reliability and speed. Click the button to disable receiving text (idk why you'd want that but anyway)" Margin="28,0"/>
+
+                                    <TextBlock Padding="5" HorizontalAlignment="Left" Text="Is Running: " Grid.Row="1" Margin="0,0,0,0"/>
+                                    <TextBlock Text="{Binding IsReceiveThreadActive, UpdateSourceTrigger=PropertyChanged}" Padding="0 5 5 5" Margin="72,0,0,0" Grid.Row="1"/>
+                                    <Button Command="{Binding AutoStartStopReceiverCommand, Mode=OneTime}" Content="{Binding IsReceiveThreadActive, ConverterParameter=Stop#Start, Converter={StaticResource BoolToIsConnectedConverter}, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2"/>
                                 </Grid>
                             </Grid>
 
-                            <Separator Style="{DynamicResource VerticalSeparator}" HorizontalAlignment="Left" Width="1" Margin="175,0,0,0"/>
+                            <Grid Margin="0,0,0,0" Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="32*"/>
+                                    <RowDefinition Height="31*"/>
+                                    <RowDefinition Height="26"/>
+                                    <RowDefinition Height="32*"/>
+                                    <RowDefinition Height="32*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5" Text="Timeouts (in ms)"/>
+                                <TextBlock Text="Read" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="1"/>
+                                <TextBlock Text="Write" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="2"/>
 
-                            <Grid Margin="181,0,0,0">
-                                <TextBlock Text="Timeouts" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="5"/>
-                                <TextBlock Text="Read" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,26,0,0"/>
-                                <TextBlock Text="Write" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,57,0,0"/>
+                                <TextBlock Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Buffer Size (in bytes)" Grid.Row="3"/>
+                                <TextBlock Padding="5" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Read" Grid.Row="4"/>
+                                <TextBlock Padding="5" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Write" Grid.Row="5"/>
 
-                                <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,87"/>
+                                <Slider Value="{Binding Settings.ReadTimeout, UpdateSourceTrigger=PropertyChanged}"     Minimum="100" Maximum="10000" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="250" IsSnapToTickEnabled="False" AutoToolTipPlacement="TopLeft" Grid.Row="1" Margin="41,0,0,0"/>
+                                <Slider Value="{Binding Settings.WriteTimeout, UpdateSourceTrigger=PropertyChanged}"    Minimum="100" Maximum="10000" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="250" IsSnapToTickEnabled="False" AutoToolTipPlacement="TopLeft" Grid.Row="2" Margin="41,0,0,0"/>
+                                <Slider Value="{Binding Settings.ReadBufferSize, UpdateSourceTrigger=PropertyChanged}"  Minimum="4096" Maximum="32768" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1024" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" IsEnabled="{Binding Settings.CanEditControls, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Margin="41,0,48,0"/>
+                                <Slider Value="{Binding Settings.WriteBufferSize, UpdateSourceTrigger=PropertyChanged}" Minimum="4096" Maximum="32768" VerticalAlignment="Center" TickPlacement="BottomRight" TickFrequency="1024" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" IsEnabled="{Binding Settings.CanEditControls, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="41,0,48,0"/>
 
-                                <TextBlock Padding="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,57" Text="Buffer Sizes"/>
-                                <TextBlock Padding="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,31" Text="Read"/>
-                                <TextBlock Padding="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="Write"/>
-
-                                <Slider Value="{Binding Settings.ReadTimeout, UpdateSourceTrigger=PropertyChanged}" Minimum="100" Maximum="10000" VerticalAlignment="Top" Margin="41,26,0,0" TickPlacement="BottomRight" TickFrequency="200" IsSnapToTickEnabled="False"/>
-                                <Slider Value="{Binding Settings.WriteTimeout, UpdateSourceTrigger=PropertyChanged}" Minimum="100" Maximum="10000" VerticalAlignment="Top" Margin="41,57,0,0" TickPlacement="BottomRight" TickFrequency="200" IsSnapToTickEnabled="False"/>
-                                <Slider Value="{Binding Settings.ReadBufferSize, UpdateSourceTrigger=PropertyChanged}" Minimum="100" Maximum="10000" VerticalAlignment="Bottom" Margin="41,0,50,31" TickPlacement="BottomRight" TickFrequency="200" IsSnapToTickEnabled="False"/>
-                                <Slider Value="{Binding Settings.WriteBufferSize, UpdateSourceTrigger=PropertyChanged}" Minimum="100" Maximum="10000" VerticalAlignment="Bottom" Margin="41,0,48,0" TickPlacement="BottomRight" TickFrequency="200" IsSnapToTickEnabled="False"/>
-
-                                <Button Command="{Binding ClearBuffersCommand}" CommandParameter="r" Content="Clear" Margin="0,126,0,31" HorizontalAlignment="Right" Width="48" ToolTip="Clear Read/Receive Buffers"/>
-                                <Button Command="{Binding ClearBuffersCommand}" CommandParameter="w" Content="Clear" Margin="0,157,0,0" HorizontalAlignment="Right" Width="48" ToolTip="Clear Write/Transmit Buffers"/>
+                                <Button Command="{Binding ClearBuffersCommand}" CommandParameter="r" Content="Clear" ToolTip="Clear Read/Receive Buffers"   IsEnabled="{Binding Settings.CanEditControls, UpdateSourceTrigger=PropertyChanged}" Height="26" Width="48" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="4"/>
+                                <Button Command="{Binding ClearBuffersCommand}" CommandParameter="w" Content="Clear" ToolTip="Clear Write/Transmit Buffers" IsEnabled="{Binding Settings.CanEditControls, UpdateSourceTrigger=PropertyChanged}" Height="26" Width="48" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="5"/>
                             </Grid>
                         </Grid>
+                    </Grid>
+                    <Grid DataContext="{Binding Settings, Mode=OneTime}"
+                          IsEnabled="{Binding CanEditControls, UpdateSourceTrigger=PropertyChanged}"
+                          Grid.Column="2">
+                        <Grid.Resources>
+                            <x:Array x:Key="baudRates" Type="{x:Type system:String}">
+                                <system:String>110</system:String>
+                                <system:String>330</system:String>
+                                <system:String>600</system:String>
+                                <system:String>1200</system:String>
+                                <system:String>2400</system:String>
+                                <system:String>4800</system:String>
+                                <system:String>9600</system:String>
+                                <system:String>19200</system:String>
+                                <system:String>38400</system:String>
+                                <system:String>57600</system:String>
+                                <system:String>74800</system:String>
+                                <system:String>115200</system:String>
+                                <system:String>128000</system:String>
+                                <system:String>256000</system:String>
+                            </x:Array>
+                            <x:Array x:Key="dataBits" Type="{x:Type system:String}">
+                                <system:String>5</system:String>
+                                <system:String>6</system:String>
+                                <system:String>7</system:String>
+                                <system:String>8</system:String>
+                            </x:Array>
+                            <x:Array x:Key="stopBits" Type="{x:Type settings:SettingsItemViewModel}">
+                                <settings:SettingsItemViewModel PreviewName="1" RealName="One"/>
+                                <settings:SettingsItemViewModel PreviewName="1.5" RealName="OnePointFive"/>
+                                <settings:SettingsItemViewModel PreviewName="2" RealName="Two"/>
+                            </x:Array>
+                            <x:Array x:Key="parities" Type="{x:Type system:String}">
+                                <system:String>None</system:String>
+                                <system:String>Odd</system:String>
+                                <system:String>Even</system:String>
+                                <system:String>Mark</system:String>
+                                <system:String>Space</system:String>
+                            </x:Array>
+                            <x:Array x:Key="handshakes" Type="{x:Type settings:SettingsItemViewModel}">
+                                <settings:SettingsItemViewModel PreviewName="None" RealName="None"/>
+                                <settings:SettingsItemViewModel PreviewName="X On/Off" RealName="XOnXOff"/>
+                                <settings:SettingsItemViewModel PreviewName="R.T.S" RealName="RequestToSend"/>
+                                <settings:SettingsItemViewModel PreviewName="R.T.S X On/Off" RealName="RequestToSendXOnXOff"/>
+                            </x:Array>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="55*"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="70*"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="48*"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="75*"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="45*"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="110*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBlock Text="COM Port" Padding="2 5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <ListBox VerticalAlignment="Stretch" 
+                                    Margin="0,26,0,24" 
+                                    ItemsSource="{Binding AvaliableCOMPorts, Mode=OneTime}"
+                                    SelectedItem="{Binding SelectedCOMPort, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Padding="4,3" FontSize="12"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Content="Refresh" 
+                                    BorderThickness="1 0 1 1" 
+                                    VerticalAlignment="Bottom" 
+                                    Height="24" 
+                                    BorderBrush="{DynamicResource ControlBrightDefaultBorderBrush}"
+                                    Command="{Binding RefreshCOMPortsCommand, Mode=OneTime}"/>
+                        </Grid>
 
-                        <Separator Style="{DynamicResource VerticalSeparator}" HorizontalAlignment="Left" Width="1" Margin="405,0,0,0"/>
+                        <Grid Grid.Column="2">
+                            <TextBlock Text="Baud Rate" Padding="3 5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <ListBox VerticalAlignment="Stretch" 
+                                    Margin="0,26,0,0" 
+                                    ItemsSource="{StaticResource baudRates}"
+                                    SelectedItem="{Binding SelectedBaudRate, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Padding="4,3" FontSize="11"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
 
-                        <Grid DataContext="{Binding Settings, Mode=OneTime}" Margin="411,0,0,0">
-                            <Grid.Resources>
-                                <x:Array x:Key="baudRates" Type="{x:Type system:String}">
-                                    <system:String>110</system:String>
-                                    <system:String>330</system:String>
-                                    <system:String>600</system:String>
-                                    <system:String>1200</system:String>
-                                    <system:String>2400</system:String>
-                                    <system:String>4800</system:String>
-                                    <system:String>9600</system:String>
-                                    <system:String>19200</system:String>
-                                    <system:String>38400</system:String>
-                                    <system:String>57600</system:String>
-                                    <system:String>74800</system:String>
-                                    <system:String>115200</system:String>
-                                    <system:String>128000</system:String>
-                                    <system:String>256000</system:String>
-                                </x:Array>
-                                <x:Array x:Key="dataBits" Type="{x:Type system:String}">
-                                    <system:String>5</system:String>
-                                    <system:String>6</system:String>
-                                    <system:String>7</system:String>
-                                    <system:String>8</system:String>
-                                </x:Array>
-                                <x:Array x:Key="stopBits" Type="{x:Type system:String}">
-                                    <system:String>One</system:String>
-                                    <system:String>OnePointFive</system:String>
-                                    <system:String>Two</system:String>
-                                </x:Array>
-                                <x:Array x:Key="parities" Type="{x:Type system:String}">
-                                    <system:String>None</system:String>
-                                    <system:String>Odd</system:String>
-                                    <system:String>Even</system:String>
-                                    <system:String>Mark</system:String>
-                                    <system:String>Space</system:String>
-                                </x:Array>
-                                <x:Array x:Key="handshakes" Type="{x:Type system:String}">
-                                    <system:String>None</system:String>
-                                    <system:String>XOnXOff</system:String>
-                                    <system:String>RequestToSend</system:String>
-                                    <system:String>RequestToSendXOnXOff</system:String>
-                                </x:Array>
-                            </Grid.Resources>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120*"/>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="110*"/>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="100*"/>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="115*"/>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="100*"/>
-                                <ColumnDefinition Width="5"/>
-                                <ColumnDefinition Width="185*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0">
-                                <TextBlock Text="COM Ports" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <ListBox VerticalAlignment="Stretch" 
-                                         Margin="0,26,0,24" 
-                                         ItemsSource="{Binding AvaliableCOMPorts, Mode=OneTime}"
-                                         SelectedItem="{Binding SelectedCOMPort, UpdateSourceTrigger=PropertyChanged}">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" Padding="4,3"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                                <Button Content="Refresh" 
-                                        BorderThickness="1 0 1 1" 
-                                        VerticalAlignment="Bottom" 
-                                        Height="24" 
-                                        BorderBrush="{DynamicResource ControlBrightDefaultBorderBrush}"
-                                        Command="{Binding RefreshCOMPortsCommand, Mode=OneTime}"/>
-                            </Grid>
+                        <Grid Grid.Column="4">
+                            <TextBlock Text="Data Bits" Padding="1 5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <ListBox VerticalAlignment="Stretch" 
+                                    Margin="0,26,0,0" 
+                                    ItemsSource="{StaticResource dataBits}"
+                                    SelectedItem="{Binding SelectedDataBits, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Padding="4,3" FontSize="20"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
 
-                            <Grid Grid.Column="2">
-                                <TextBlock Text="Baud Rate" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <ListBox VerticalAlignment="Stretch" 
-                                         Margin="0,26,0,0" 
-                                         ItemsSource="{StaticResource baudRates}"
-                                         SelectedItem="{Binding SelectedBaudRate, UpdateSourceTrigger=PropertyChanged}">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" Padding="4,3"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </Grid>
+                        <Grid Grid.Column="6">
+                            <TextBlock Text="Stop Bits" Padding="3 5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <ListBox VerticalAlignment="Stretch" 
+                                    Margin="0,26,0,0" 
+                                    SelectedIndex="0"
+                                    ItemsSource="{StaticResource stopBits}"
+                                    SelectedItem="{Binding SelectedStopBits, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <settings:SettingsItem DataContext="{Binding}" Padding="2,1"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
 
-                            <Grid Grid.Column="4">
-                                <TextBlock Text="Data Bits" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <ListBox VerticalAlignment="Stretch" 
-                                         Margin="0,26,0,0" 
-                                         ItemsSource="{StaticResource dataBits}"
-                                         SelectedItem="{Binding SelectedDataBits, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
+                        <Grid Grid.Column="8">
+                            <TextBlock Text="Parity" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <ListBox VerticalAlignment="Stretch" 
+                                    Margin="0,26,0,0" 
+                                    ItemsSource="{StaticResource parities}"
+                                    SelectedItem="{Binding SelectedParity, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Padding="4,3" FontSize="12"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
 
-                            <Grid Grid.Column="6">
-                                <TextBlock Text="Stop Bits" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <ListBox VerticalAlignment="Stretch" 
-                                         Margin="0,26,0,0" 
-                                         ItemsSource="{StaticResource stopBits}"
-                                         SelectedItem="{Binding SelectedStopBits, UpdateSourceTrigger=PropertyChanged}">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" Padding="4,3"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </Grid>
-
-                            <Grid Grid.Column="8">
-                                <TextBlock Text="Parity" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <ListBox VerticalAlignment="Stretch" 
-                                         Margin="0,26,0,0" 
-                                         ItemsSource="{StaticResource parities}"
-                                         SelectedItem="{Binding SelectedParity, UpdateSourceTrigger=PropertyChanged}">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" Padding="4,3"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </Grid>
-
-                            <Grid Grid.Column="10">
-                                <TextBlock Text="Handshake" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <ListBox VerticalAlignment="Stretch" 
-                                         Margin="0,26,0,0" 
-                                         ItemsSource="{StaticResource handshakes}"
-                                         SelectedItem="{Binding SelectedHandshake, UpdateSourceTrigger=PropertyChanged}">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" Padding="4,3"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </Grid>
+                        <Grid Grid.Column="10">
+                            <TextBlock Text="Handshake" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <ListBox VerticalAlignment="Stretch" 
+                                    Margin="0,26,0,0" 
+                                    SelectedIndex="1"
+                                    ItemsSource="{StaticResource handshakes}"
+                                    SelectedItem="{Binding SelectedHandshake, UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <settings:SettingsItem DataContext="{Binding}" Padding="2,1"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
-        </Border>
+        </Grid>
     </Grid>
 </Window>

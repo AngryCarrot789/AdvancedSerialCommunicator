@@ -1,11 +1,8 @@
 ﻿using AdvancedSerialCommunicator.Logging;
 using AdvancedSerialCommunicator.Messaging;
+using AdvancedSerialCommunicator.Serial.Settings;
 using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TheRFramework.Utilities;
 
 namespace AdvancedSerialCommunicator.Serial
@@ -19,7 +16,11 @@ namespace AdvancedSerialCommunicator.Serial
         public bool IsConnected
         {
             get => _isConnected;
-            set => RaisePropertyChanged(ref _isConnected, value);
+            set
+            {
+                RaisePropertyChanged(ref _isConnected, value);
+                Settings.CanEditControls = !value;
+            }
         }
 
         public bool IsReceiveThreadActive
@@ -51,12 +52,15 @@ namespace AdvancedSerialCommunicator.Serial
         {
             Port = new SerialPort();
             Port.ErrorReceived += Port_ErrorReceived;
+            Port.PinChanged += Port_PinChanged;
 
             Settings = new PortSettingsViewModel();
             Settings.SettingsChangedCallback = UpdateSettings;
             Settings.TimeoutsChangedCallback = UpdateTimeouts;
             Settings.BufferSizesChangedCallback = UpdateBufferSizes;
-            Settings.ThingsChangedCallback = UpdateThings;
+            Settings.SoftwareHardwareSettingsChangedCallback = UpdateSoftwareHardwareSettings;
+            Settings.BreakStateChangedCallback = UpdateBreakState;
+            IsConnected = false;
 
             Boxes = new MessageBoxLogger();
 
@@ -71,12 +75,7 @@ namespace AdvancedSerialCommunicator.Serial
             Receiver = new MessageReceiver();
             Receiver.UpdateSerialPort(Port);
             Receiver.MessageReceivedCallback = Messages.MessageReceived;
-            Receiver.UnprocessedMessageCallback = Messages.UnprocessedBufferMessage;
-
-            UpdateSettings();
-            UpdateTimeouts();
-            UpdateBufferSizes();
-            UpdateThings();
+            Receiver.BufferDataFoundCallback = Messages.AddBufferData;
 
             AutoConnectDisconnectCommand = new Command(AutoConnectDisconnect);
             ResetSerialPortCommand = new Command(ResetSerialPort);
@@ -84,6 +83,16 @@ namespace AdvancedSerialCommunicator.Serial
             ClearBuffersCommand = new CommandParam<string>(DiscardPortBuffers);
 
             StartMessageReceiver();
+        }
+
+        private void Port_PinChanged(object sender, SerialPinChangedEventArgs e)
+        {
+            LogMessages($"Pin changed. Code: {e.EventType}. Code is a bit-wise code, the codes avaliable are:", true);
+            LogMessages($"-- Clear-To-Send (CTS):  {SerialPinChange.CtsChanged}");
+            LogMessages($"-- Data-Set-Ready (DSR): {SerialPinChange.DsrChanged}");
+            LogMessages($"-- Carrier Detect:       {SerialPinChange.CDChanged}");
+            LogMessages($"-- Break: {SerialPinChange.Break}");
+            LogMessages($"-- Ring:  {SerialPinChange.Ring}");
         }
 
         private void Port_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
@@ -118,7 +127,7 @@ namespace AdvancedSerialCommunicator.Serial
             LogMessages($"Error: {errormesage}", true);
         }
 
-        private void LogMessages(string text, bool writeToReceived)
+        private void LogMessages(string text, bool writeToReceived = true)
         {
             if (writeToReceived)
             {
@@ -172,6 +181,7 @@ namespace AdvancedSerialCommunicator.Serial
             }
 
             Messages.WriteConnectionSuccess(ConnectedPort);
+            CheckForDataInBuffer();
         }
 
         public void Disconnect()
@@ -281,8 +291,16 @@ namespace AdvancedSerialCommunicator.Serial
             UpdateSettings();
             UpdateTimeouts();
             UpdateBufferSizes();
-            UpdateThings();
+            UpdateSoftwareHardwareSettings();
             LogMessages($"Successfully reset SerialPort", true);
+        }
+
+        public void CheckForDataInBuffer()
+        {
+            if (Port.IsOpen)
+            {
+                Receiver.ProcessBufferedString();
+            }
         }
 
         public void UpdateSettings()
@@ -321,11 +339,26 @@ namespace AdvancedSerialCommunicator.Serial
             }
         }
 
-        // Update "Things"
-        public void UpdateThings()
+        public void UpdateSoftwareHardwareSettings()
         {
-            Port.DtrEnable = Settings.GetDTR();
-            Port.RtsEnable = Settings.GetRTS();
+            if (Port != null)
+            {
+                Port.DtrEnable = Settings.GetDTR();
+                Port.RtsEnable = Settings.GetRTS();
+                Port.DiscardNull = Settings.GetDiscardNull();
+            }
+        }
+
+        public void UpdateBreakState()
+        {
+            if (Port.IsOpen)
+            {
+                Port.BreakState = Settings.GetBreakState();
+            }
+            else
+            {
+                LogMessages("Cannot change the BreakState when the port is closed");
+            }
         }
     }
 }

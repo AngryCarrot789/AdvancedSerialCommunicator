@@ -56,8 +56,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttachedProperties\HorizontalScrolling.cs" />
+    <Compile Include="Converters\BoolInvertConverter.cs" />
     <Compile Include="Converters\BoolToColourConverter.cs" />
     <Compile Include="Converters\BoolToCustomStringConverter.cs" />
+    <Compile Include="Help\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Help\HelpViewModel.cs" />
+    <Compile Include="Help\SerialInfoWindow.xaml.cs">
+      <DependentUpon>SerialInfoWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Help\SerialInfo\IIdkWhyIAddedThisSerialInfoControlStuffItsPrettyMuchUseless.cs" />
+    <Compile Include="Help\SerialInfo\SerialInfoItem.xaml.cs">
+      <DependentUpon>SerialInfoItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Help\SerialInfo\SerialInfoViewModel.cs" />
     <Compile Include="Interfaces\IMessageBoxes.cs" />
     <Compile Include="Logging\InformationLogger.cs" />
     <Compile Include="Logging\MessageBoxLogger.cs" />
@@ -67,21 +81,33 @@
     <Compile Include="Messaging\MessageSender.cs" />
     <Compile Include="Messaging\MessagesViewModel.cs" />
     <Compile Include="Messaging\MessagingError.cs" />
-    <Compile Include="Serial\PortSettingsViewModel.cs" />
+    <Compile Include="Serial\Settings\PortSettingsViewModel.cs" />
     <Compile Include="Serial\SerialPortViewModel.cs" />
+    <Compile Include="Serial\Settings\SettingsItem.xaml.cs">
+      <DependentUpon>SettingsItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Serial\Settings\SettingsItemViewModel.cs" />
     <Compile Include="Themes\DarkTheme.xaml.cs">
       <DependentUpon>DarkTheme.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Themes\LightTheme.xaml.cs">
-      <DependentUpon>LightTheme.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Utilities\BaseViewModel.cs" />
     <Compile Include="Utilities\Command.cs" />
     <Compile Include="Utilities\CommandParam.cs" />
     <Compile Include="Utilities\ExecutableStatus.cs" />
     <Compile Include="Utilities\GlobalSettings.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Page Include="Help\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Help\SerialInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Help\SerialInfo\SerialInfoItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,11 +120,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Themes\DarkTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Serial\Settings\SettingsItem.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\LightTheme.xaml">
+    <Page Include="Themes\DarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

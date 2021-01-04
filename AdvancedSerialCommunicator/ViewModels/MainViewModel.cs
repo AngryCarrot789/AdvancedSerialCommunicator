@@ -1,10 +1,5 @@
-﻿using AdvancedSerialCommunicator.Messaging;
+﻿using AdvancedSerialCommunicator.Help;
 using AdvancedSerialCommunicator.Serial;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TheRFramework.Utilities;
 
 namespace AdvancedSerialCommunicator.ViewModels
@@ -13,9 +8,12 @@ namespace AdvancedSerialCommunicator.ViewModels
     {
         public SerialPortViewModel Port { get; set; }
 
+        public HelpViewModel Help { get; set; }
+
         public MainViewModel()
         {
             Port = new SerialPortViewModel();
+            Help = new HelpViewModel();
         }
     }
 }

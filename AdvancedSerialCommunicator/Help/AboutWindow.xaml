@@ -1,0 +1,21 @@
+﻿<Window x:Class="AdvancedSerialCommunicator.Help.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdvancedSerialCommunicator.Help"
+        mc:Ignorable="d"
+        Title="About this program" 
+        Height="448.5" Width="555.5"
+        Style="{DynamicResource CustomToolWindowStyle}">
+    <Grid>
+        <StackPanel Margin="10 10 10 40">
+            <TextBlock Text="Made by Kettlesimulator / TheR / ThatThingCalledTheGalaxy / AngryCarrot789 / Carrot" FontSize="32" TextWrapping="Wrap"/>
+            <TextBlock Text="(all my nicknames lol)" FontSize="24" TextWrapping="Wrap"/>
+            <Separator Margin="0 5"/>
+            <TextBlock Text="This program can be used to communicate between COM ports. They have to be COM ports for some reason" FontSize="16" TextWrapping="Wrap"/>
+            <TextBlock Text="It uses a reader thread to read information from the serialport's base stream" FontSize="16" TextWrapping="Wrap"/>
+        </StackPanel>
+        <Button Content="Okay" Margin="448,347,10,10" Click="Button_Click"/>
+    </Grid>
+</Window>

@@ -10,6 +10,7 @@ namespace AdvancedSerialCommunicator.Messaging
     {
         TimeoutException,
         GeneralError,
+        NotConnected,
         None
     }
 }
