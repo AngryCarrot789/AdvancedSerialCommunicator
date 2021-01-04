@@ -73,15 +73,14 @@
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <GroupBox DataContext="{Binding Port.Messages, Mode=OneTime}" 
-                  Grid.Row="0" 
+        <GroupBox Grid.Row="0" 
                   Margin="5,5,5,205">
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Messaging" Padding="4"/>
                     <Separator Style="{DynamicResource VerticalSeparator}" Margin="3 0 5 0"/>
-                    <Button Command="{Binding AboutCommand, Mode=OneTime}" Content="About this program"                       Background="{DynamicResource ControlBrightDefaultBackground}" BorderBrush="{DynamicResource ControlDarkerBorderBrush}" Width="115"/>
-                    <Button Command="{Binding SerialInfoCommand, Mode=OneTime}" Content="About Serial Ports" Margin="5 0 0 0" Background="{DynamicResource ControlBrightDefaultBackground}" BorderBrush="{DynamicResource ControlDarkerBorderBrush}" Width="115"/>
+                    <Button Command="{Binding Help.AboutCommand, Mode=OneTime}" Content="About this program"                       Background="{DynamicResource ControlBrightDefaultBackground}" BorderBrush="{DynamicResource ControlDarkerBorderBrush}" Width="115"/>
+                    <Button Command="{Binding Help.SerialInfoCommand, Mode=OneTime}" Content="About Serial Ports" Margin="5 0 0 0" Background="{DynamicResource ControlBrightDefaultBackground}" BorderBrush="{DynamicResource ControlDarkerBorderBrush}" Width="115"/>
                 </StackPanel>
             </GroupBox.Header>
             <GroupBox.ContextMenu>
@@ -89,7 +88,7 @@
                     <MenuItem Header="Garbage Collector" Click="MenuItem_Click" Template="{DynamicResource SingleDropDownMenuItem}"/>
                 </ContextMenu>
             </GroupBox.ContextMenu>
-            <Grid>
+            <Grid DataContext="{Binding Port.Messages, Mode=OneTime}" >
                 <Grid Margin="0,0,0,35">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5*" MinWidth="218"/>
